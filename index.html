@@ -2,30 +2,38 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>😈 Clicker</title>
 <style>
   body {
+    margin: 0;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
-    font-family: sans-serif;
     background-color: #111;
     color: #fff;
+    font-family: sans-serif;
     user-select: none;
+    touch-action: manipulation; /* blokuje zoom na touch devices */
   }
 
+  /* Emotka zakotwiczona na środku ekranu */
   #clicker {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     font-size: 5rem;
     cursor: pointer;
     transition: transform 0.1s;
   }
 
   #clicker:active {
-    transform: scale(1.2);
+    transform: translate(-50%, -50%) scale(1.2);
   }
 
+  /* Licznik w stałej pozycji */
   #counter {
     position: fixed;
     top: 20px;
@@ -48,7 +56,7 @@
   let count = 0;
 
   clicker.addEventListener('click', (e) => {
-    e.preventDefault(); // blokuje wszelkie domyślne przewijanie/efekty
+    e.preventDefault(); // blokuje przewijanie i ruch ekranu
     count++;
     counter.textContent = count;
   });
