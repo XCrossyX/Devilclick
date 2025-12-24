@@ -11,44 +11,42 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #111;
-    color: #fff;
-    font-family: sans-serif;
+    background: linear-gradient(135deg, #1a1a1a, #333);
+    font-family: 'Arial', sans-serif;
     user-select: none;
+    overflow: hidden;
     touch-action: manipulation; /* blokuje zoom na touch devices */
+    color: #fff;
+    flex-direction: column;
   }
 
-  /* Emotka zakotwiczona na środku ekranu */
+  /* Licznik nad emotką */
+  #counter {
+    font-size: 3rem;
+    background: rgba(255, 0, 0, 0.8);
+    padding: 15px 30px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 20px #ff0000;
+    transition: transform 0.1s;
+  }
+
+  /* Emotka zakotwiczona na środku */
   #clicker {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 5rem;
+    font-size: 6rem;
     cursor: pointer;
     transition: transform 0.1s;
   }
 
   #clicker:active {
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-
-  /* Licznik w stałej pozycji */
-  #counter {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    font-size: 2rem;
-    background: rgba(0,0,0,0.5);
-    padding: 10px 20px;
-    border-radius: 10px;
+    transform: scale(1.3);
   }
 </style>
 </head>
 <body>
 
-<div id="clicker">😈</div>
 <div id="counter">0</div>
+<div id="clicker">😈</div>
 
 <script>
   const clicker = document.getElementById('clicker');
@@ -59,6 +57,12 @@
     e.preventDefault(); // blokuje przewijanie i ruch ekranu
     count++;
     counter.textContent = count;
+    
+    // Efekt “skoku” licznika przy kliknięciu
+    counter.style.transform = "scale(1.3)";
+    setTimeout(() => {
+      counter.style.transform = "scale(1)";
+    }, 100);
   });
 </script>
 
