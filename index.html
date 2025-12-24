@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>😈 Devil Clicker</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            background: radial-gradient(circle at top, #2b1055, #000);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .game {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 40px 60px;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(255, 0, 100, 0.3);
+        }
+
+        .counter {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .emoji {
+            font-size: 120px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s ease, filter 0.1s ease;
+        }
+
+        .emoji:active {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 20px crimson);
+        }
+
+        .hint {
+            margin-top: 20px;
+            opacity: 0.7;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game">
+    <div class="counter">Kliknięcia: <span id="count">0</span></div>
+    <div class="emoji" id="emoji">😈</div>
+    <div class="hint">Klikaj diabła ile dasz radę</div>
+</div>
+
+<script>
+    let count = localStorage.getItem("devilClicks")
+        ? parseInt(localStorage.getItem("devilClicks"))
+        : 0;
+
+    const countEl = document.getElementById("count");
+    const emoji = document.getElementById("emoji");
+
+    countEl.textContent = count;
+
+    emoji.addEventListener("click", () => {
+        count++;
+        countEl.textContent = count;
+        localStorage.setItem("devilClicks", count);
+    });
+</script>
+
+</body>
+</html>
