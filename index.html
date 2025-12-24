@@ -36,6 +36,79 @@
             font-size: 120px;
             cursor: pointer;
             user-select: none;
+            transform-origin: 50% 50%;
+        }
+
+        .hint {
+            margin-top: 20px;
+            opacity: 0.7;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game">
+    <div class="counter">Kliknięcia: <span id="count">0</span></div>
+    <div class="emoji" id="emoji">😈</div>
+    <div class="hint">Możesz spamować bez końca</div>
+</div>
+
+<script>
+    // ===== COUNTER (NO SAVE) =====
+    let count = 0;
+    const countEl = document.getElementById("count");
+    const emoji = document.getElementById("emoji");
+
+    // ===== AUDIO =====
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playClickSound() {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = "square";
+        osc.frequency.value = 180 + Math.random() * 220;
+        gain.gain.value = 0.15;
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.06);
+    }
+
+    // ===== PERFECTLY ANCHORED ANIMATION =====
+    function animateClick() {
+        emoji.animate(
+            [
+                { transform: "scale(1)" },
+                { transform: "scale(1.28)" },
+                { transform: "scale(1)" }
+            ],
+            {
+                duration: 140,
+                easing: "ease-out",
+                composite: "replace" // 🔒 KLUCZ DO STABILNOŚCI
+            }
+        );
+    }
+
+    // ===== CLICK =====
+    emoji.addEventListener("click", () => {
+        if (audioCtx.state === "suspended") audioCtx.resume();
+
+        count++;
+        countEl.textContent = count;
+
+        playClickSound();
+        animateClick();
+    });
+</script>
+
+</body>
+</html>            cursor: pointer;
+            user-select: none;
             transition: transform 0.08s ease;
             will-change: transform;
         }
