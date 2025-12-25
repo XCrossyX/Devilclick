@@ -2,16 +2,17 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>😈 Devil Clicker</title>
 
 <style>
 body{
   margin:0;
   height:100vh;
-  background:#111;
+  background:linear-gradient(135deg,#111,#300);
   color:#fff;
-  font-family:Arial;
+  font-family:Arial, sans-serif;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -20,55 +21,85 @@ body{
   overflow:hidden;
 }
 
-#rebirths{margin-bottom:10px;color:#ff5555;font-size:1.4rem;}
+#rebirthInfo{
+  font-size:1.2rem;
+  color:#ff6666;
+  margin-bottom:10px;
+}
+
 #counter{
   font-size:3rem;
   background:#900;
   padding:15px 30px;
   border-radius:15px;
   margin-bottom:20px;
+  box-shadow:0 0 20px red;
 }
-#clicker{font-size:6rem;cursor:pointer;margin-bottom:25px;}
-#shop{display:flex;gap:15px;flex-wrap:wrap;justify-content:center;}
+
+#clicker{
+  font-size:6rem;
+  cursor:pointer;
+  margin-bottom:25px;
+}
+#clicker:active{transform:scale(1.3);}
+
+#shop{
+  display:flex;
+  gap:15px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
 
 .item{
-  background:#000;
-  padding:15px;
+  background:#000a;
+  padding:15px 20px;
   border-radius:10px;
   cursor:pointer;
-  min-width:150px;
+  min-width:160px;
   text-align:center;
 }
+.item:hover{background:#900;}
 
 #rebirthBtn{
-  display:none;
   margin-top:25px;
-  padding:15px 30px;
+  padding:15px 35px;
   font-size:1.4rem;
   background:red;
-  border:none;
   color:white;
-  border-radius:10px;
+  border:none;
+  border-radius:12px;
   cursor:pointer;
+  display:none;
+  box-shadow:0 0 20px red;
 }
 </style>
 </head>
 
 <body>
 
-<div id="rebirths">Rebirthy: 0</div>
+<div id="rebirthInfo">Rebirthy: 0 | Mnożnik: x1</div>
 <div id="counter">0</div>
 <div id="clicker">😈</div>
 
 <div id="shop">
-  <div class="item" id="u1">Diabełek +1<br>Cena: <span id="p1">25</span></div>
-  <div class="item" id="u5">Diabeł +5<br>Cena: <span id="p5">100</span></div>
-  <div class="item" id="u50">Diablo +50<br>Cena: <span id="p50">900</span></div>
+  <div class="item" id="u1">
+    Diabełek +1<br>
+    Cena: <span id="p1">25</span>
+  </div>
+  <div class="item" id="u5">
+    Diabeł +5<br>
+    Cena: <span id="p5">100</span>
+  </div>
+  <div class="item" id="u50">
+    Diablo +50<br>
+    Cena: <span id="p50">900</span>
+  </div>
 </div>
 
-<button id="rebirthBtn">🔥 REBIRTH 🔥</button>
+<button id="rebirthBtn">🔥 REBIRTH (1 000 000)</button>
 
 <script>
+/* ====== ZMIENNE ====== */
 let clicks = 0;
 let baseClick = 1;
 let rebirths = 0;
@@ -80,54 +111,77 @@ let upgrades = {
 };
 
 const counter = document.getElementById("counter");
-const rebirthTxt = document.getElementById("rebirths");
+const rebirthInfo = document.getElementById("rebirthInfo");
 const clicker = document.getElementById("clicker");
 const rebirthBtn = document.getElementById("rebirthBtn");
 
-function update(){
-  counter.textContent = Math.floor(clicks);
-  rebirthTxt.textContent = "Rebirthy: " + rebirths;
-  rebirthBtn.style.display = clicks >= 1_000_000 ? "block" : "none";
+/* ====== FUNKCJE ====== */
+function rebirthCost(){
+  return (rebirths + 1) * 1_000_000;
 }
 
+function update(){
+  counter.textContent = Math.floor(clicks);
+
+  rebirthInfo.textContent =
+    `Rebirthy: ${rebirths} | Mnożnik: x${rebirths + 1}`;
+
+  rebirthBtn.textContent =
+    `🔥 REBIRTH (${rebirthCost().toLocaleString("pl-PL")})`;
+
+  rebirthBtn.style.display =
+    clicks >= rebirthCost() ? "block" : "none";
+}
+
+/* ====== KLIKANIE ====== */
 clicker.addEventListener("click", ()=>{
-  clicks += baseClick;
+  clicks += baseClick * (rebirths + 1);
   update();
 });
 
+/* ====== ZAKUPY ====== */
 function buy(id){
-  let u = upgrades[id];
-  if(clicks >= u.price){
-    clicks -= u.price;
-    baseClick += u.val;
-    u.price = Math.floor(u.price * 1.5);
-    document.getElementById("p1").textContent = upgrades.u1.price;
-    document.getElementById("p5").textContent = upgrades.u5.price;
-    document.getElementById("p50").textContent = upgrades.u50.price;
-    update();
-  }
+  const u = upgrades[id];
+  if(clicks < u.price) return;
+
+  clicks -= u.price;
+  baseClick += u.val;
+  u.price = Math.floor(u.price * 1.5);
+
+  document.getElementById("p1").textContent = upgrades.u1.price;
+  document.getElementById("p5").textContent = upgrades.u5.price;
+  document.getElementById("p50").textContent = upgrades.u50.price;
+
+  update();
 }
 
 document.getElementById("u1").addEventListener("click",()=>buy("u1"));
 document.getElementById("u5").addEventListener("click",()=>buy("u5"));
 document.getElementById("u50").addEventListener("click",()=>buy("u50"));
 
-rebirthBtn.addEventListener("click",()=>{
-  if(clicks < 1_000_000) return;
-  rebirths++;
-  baseClick = 1 + rebirths * 0.1;
+/* ====== REBIRTH ====== */
+rebirthBtn.addEventListener("click", ()=>{
+  const cost = rebirthCost();
+  if(clicks < cost) return;
+
   clicks = 0;
+  rebirths++;
+  baseClick = 1;
+
   upgrades = {
     u1:{val:1,price:25},
     u5:{val:5,price:100},
     u50:{val:50,price:900}
   };
+
   document.getElementById("p1").textContent = 25;
   document.getElementById("p5").textContent = 100;
   document.getElementById("p50").textContent = 900;
+
   update();
 });
 
+/* START */
 update();
 </script>
 
