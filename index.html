@@ -45,14 +45,15 @@ body{
 
 #shop{
   display:flex;
-  gap:15px;
+  gap:12px;
   flex-wrap:wrap;
   justify-content:center;
+  max-width:900px;
 }
 
 .item{
   background:#000a;
-  padding:15px 20px;
+  padding:12px 16px;
   border-radius:10px;
   cursor:pointer;
   min-width:160px;
@@ -82,24 +83,19 @@ body{
 <div id="clicker">😈</div>
 
 <div id="shop">
-  <div class="item" id="u1">
-    Diabełek +1<br>
-    Cena: <span id="p1">25</span>
-  </div>
-  <div class="item" id="u5">
-    Diabeł +5<br>
-    Cena: <span id="p5">100</span>
-  </div>
-  <div class="item" id="u50">
-    Diablo +50<br>
-    Cena: <span id="p50">900</span>
-  </div>
+  <div class="item" id="u1">Diabełek +1<br>Cena: <span id="p1">25</span></div>
+  <div class="item" id="u5">Diabeł +5<br>Cena: <span id="p5">100</span></div>
+  <div class="item" id="u50">Diablo +50<br>Cena: <span id="p50">900</span></div>
+
+  <div class="item" id="u250">Diablo X +250<br>Cena: <span id="p250">4500</span></div>
+  <div class="item" id="u1000">Diablo Son +1000<br>Cena: <span id="p1000">15000</span></div>
+  <div class="item" id="u5000">Diablos +5000<br>Cena: <span id="p5000">65000</span></div>
 </div>
 
-<button id="rebirthBtn">🔥 REBIRTH (1 000 000)</button>
+<button id="rebirthBtn">🔥 REBIRTH</button>
 
 <script>
-/* ====== ZMIENNE ====== */
+/* ===== ZMIENNE ===== */
 let clicks = 0;
 let baseClick = 1;
 let rebirths = 0;
@@ -107,7 +103,10 @@ let rebirths = 0;
 let upgrades = {
   u1:{val:1,price:25},
   u5:{val:5,price:100},
-  u50:{val:50,price:900}
+  u50:{val:50,price:900},
+  u250:{val:250,price:4500},
+  u1000:{val:1000,price:15000},
+  u5000:{val:5000,price:65000}
 };
 
 const counter = document.getElementById("counter");
@@ -115,31 +114,28 @@ const rebirthInfo = document.getElementById("rebirthInfo");
 const clicker = document.getElementById("clicker");
 const rebirthBtn = document.getElementById("rebirthBtn");
 
-/* ====== FUNKCJE ====== */
+/* ===== FUNKCJE ===== */
 function rebirthCost(){
   return (rebirths + 1) * 1_000_000;
 }
 
 function update(){
   counter.textContent = Math.floor(clicks);
-
   rebirthInfo.textContent =
     `Rebirthy: ${rebirths} | Mnożnik: x${rebirths + 1}`;
-
   rebirthBtn.textContent =
     `🔥 REBIRTH (${rebirthCost().toLocaleString("pl-PL")})`;
-
   rebirthBtn.style.display =
     clicks >= rebirthCost() ? "block" : "none";
 }
 
-/* ====== KLIKANIE ====== */
+/* ===== KLIK ===== */
 clicker.addEventListener("click", ()=>{
   clicks += baseClick * (rebirths + 1);
   update();
 });
 
-/* ====== ZAKUPY ====== */
+/* ===== ZAKUPY ===== */
 function buy(id){
   const u = upgrades[id];
   if(clicks < u.price) return;
@@ -148,21 +144,30 @@ function buy(id){
   baseClick += u.val;
   u.price = Math.floor(u.price * 1.5);
 
+  for(const key in upgrades){
+    document.getElementById("p"+upgrades[key].val)?.textContent = upgrades[key].price;
+  }
+
   document.getElementById("p1").textContent = upgrades.u1.price;
   document.getElementById("p5").textContent = upgrades.u5.price;
   document.getElementById("p50").textContent = upgrades.u50.price;
+  document.getElementById("p250").textContent = upgrades.u250.price;
+  document.getElementById("p1000").textContent = upgrades.u1000.price;
+  document.getElementById("p5000").textContent = upgrades.u5000.price;
 
   update();
 }
 
-document.getElementById("u1").addEventListener("click",()=>buy("u1"));
-document.getElementById("u5").addEventListener("click",()=>buy("u5"));
-document.getElementById("u50").addEventListener("click",()=>buy("u50"));
+document.getElementById("u1").onclick = ()=>buy("u1");
+document.getElementById("u5").onclick = ()=>buy("u5");
+document.getElementById("u50").onclick = ()=>buy("u50");
+document.getElementById("u250").onclick = ()=>buy("u250");
+document.getElementById("u1000").onclick = ()=>buy("u1000");
+document.getElementById("u5000").onclick = ()=>buy("u5000");
 
-/* ====== REBIRTH ====== */
+/* ===== REBIRTH ===== */
 rebirthBtn.addEventListener("click", ()=>{
-  const cost = rebirthCost();
-  if(clicks < cost) return;
+  if(clicks < rebirthCost()) return;
 
   clicks = 0;
   rebirths++;
@@ -171,17 +176,22 @@ rebirthBtn.addEventListener("click", ()=>{
   upgrades = {
     u1:{val:1,price:25},
     u5:{val:5,price:100},
-    u50:{val:50,price:900}
+    u50:{val:50,price:900},
+    u250:{val:250,price:4500},
+    u1000:{val:1000,price:15000},
+    u5000:{val:5000,price:65000}
   };
 
   document.getElementById("p1").textContent = 25;
   document.getElementById("p5").textContent = 100;
   document.getElementById("p50").textContent = 900;
+  document.getElementById("p250").textContent = 4500;
+  document.getElementById("p1000").textContent = 15000;
+  document.getElementById("p5000").textContent = 65000;
 
   update();
 });
 
-/* START */
 update();
 </script>
 
