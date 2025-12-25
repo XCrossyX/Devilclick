@@ -3,192 +3,161 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>😈 Clicker z Rebirth</title>
+<title>😈 Devil Clicker</title>
+
 <style>
-  body {
-    margin: 0;
-    height: 100vh;
-    background: linear-gradient(135deg, #1a1a1a, #333);
-    font-family: 'Arial', sans-serif;
-    user-select: none;
-    overflow: hidden;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
+body{
+  margin:0;
+  height:100vh;
+  background:linear-gradient(135deg,#111,#300);
+  color:#fff;
+  font-family:Arial;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  user-select:none;
+  overflow:hidden;
+}
 
-  #counter {
-    font-size: 3rem;
-    background: rgba(255, 0, 0, 0.8);
-    padding: 15px 30px;
-    border-radius: 15px;
-    margin-bottom: 20px;
-    box-shadow: 0 0 20px #ff0000;
-    transition: transform 0.1s;
-  }
+#rebirths{
+  font-size:1.5rem;
+  color:#ff6666;
+  margin-bottom:10px;
+}
 
-  #clicker {
-    font-size: 6rem;
-    cursor: pointer;
-    transition: transform 0.1s;
-    margin-bottom: 30px;
-  }
+#counter{
+  font-size:3rem;
+  background:#900;
+  padding:15px 30px;
+  border-radius:15px;
+  box-shadow:0 0 20px red;
+  margin-bottom:20px;
+}
 
-  #clicker:active {
-    transform: scale(1.3);
-  }
+#clicker{
+  font-size:6rem;
+  cursor:pointer;
+  margin-bottom:25px;
+}
+#clicker:active{
+  transform:scale(1.3);
+}
 
-  #shop {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
+#shop{
+  display:flex;
+  gap:15px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
 
-  .item {
-    background: rgba(0,0,0,0.7);
-    padding: 15px 25px;
-    border-radius: 10px;
-    text-align: center;
-    min-width: 150px;
-    cursor: pointer;
-    transition: 0.2s;
-  }
+.item{
+  background:#000a;
+  padding:15px 20px;
+  border-radius:10px;
+  cursor:pointer;
+  min-width:160px;
+  text-align:center;
+}
+.item:hover{background:#900;}
 
-  .item:hover {
-    background: rgba(255,0,0,0.8);
-  }
-
-  .item h3 {
-    margin: 0 0 10px 0;
-  }
-
-  .item p {
-    margin: 5px 0;
-  }
-
-  #rebirthButton {
-    padding: 15px 30px;
-    border-radius: 10px;
-    background: #ff0000;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5rem;
-    display: none;
-    color: #fff;
-    box-shadow: 0 0 15px #ff0000;
-  }
-
-  #rebirthButton:hover {
-    background: #ff4444;
-  }
+#rebirthBtn{
+  margin-top:25px;
+  padding:15px 35px;
+  font-size:1.5rem;
+  background:red;
+  color:white;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  display:none;
+  box-shadow:0 0 20px red;
+}
 </style>
 </head>
+
 <body>
 
+<div id="rebirths">Rebirthy: 0</div>
 <div id="counter">0</div>
 <div id="clicker">😈</div>
 
 <div id="shop">
-  <div class="item" id="upgrade1">
-    <h3>Diabełek +1</h3>
-    <p>Kliki +1</p>
-    <p>Koszt: <span id="price1">25</span></p>
+  <div class="item" onclick="buy('u1')">
+    <b>Diabełek +1</b><br>
+    Cena: <span id="p1">25</span>
   </div>
-  <div class="item" id="upgrade5">
-    <h3>Diabeł +5</h3>
-    <p>Kliki +5</p>
-    <p>Koszt: <span id="price5">100</span></p>
+  <div class="item" onclick="buy('u5')">
+    <b>Diabeł +5</b><br>
+    Cena: <span id="p5">100</span>
   </div>
-  <div class="item" id="upgrade50">
-    <h3>Diablo +50</h3>
-    <p>Kliki +50</p>
-    <p>Koszt: <span id="price50">900</span></p>
+  <div class="item" onclick="buy('u50')">
+    <b>Diablo +50</b><br>
+    Cena: <span id="p50">900</span>
   </div>
 </div>
 
-<button id="rebirthButton">REBIRTH!</button>
+<button id="rebirthBtn" onclick="rebirth()">🔥 REBIRTH 🔥</button>
 
 <script>
-  const clicker = document.getElementById('clicker');
-  const counter = document.getElementById('counter');
-  const rebirthButton = document.getElementById('rebirthButton');
+let clicks = 0;
+let baseClick = 1;
+let rebirths = 0;
 
-  let upgrades = {
-    upgrade1: {value: 1, price: 25},
-    upgrade5: {value: 5, price: 100},
-    upgrade50: {value: 50, price: 900}
+let upgrades = {
+  u1:{val:1,price:25},
+  u5:{val:5,price:100},
+  u50:{val:50,price:900}
+};
+
+const counter = document.getElementById("counter");
+const rebirthTxt = document.getElementById("rebirths");
+const rebirthBtn = document.getElementById("rebirthBtn");
+
+function update(){
+  counter.textContent = Math.floor(clicks);
+  rebirthTxt.textContent = "Rebirthy: " + rebirths;
+  if(clicks >= 1_000_000) rebirthBtn.style.display="block";
+}
+
+document.getElementById("clicker").onclick = ()=>{
+  clicks += baseClick;
+  update();
+};
+
+function buy(id){
+  let u = upgrades[id];
+  if(clicks >= u.price){
+    clicks -= u.price;
+    baseClick += u.val;
+    u.price = Math.floor(u.price * 1.5);
+    document.getElementById("p1").textContent = upgrades.u1.price;
+    document.getElementById("p5").textContent = upgrades.u5.price;
+    document.getElementById("p50").textContent = upgrades.u50.price;
+    update();
+  }
+}
+
+function rebirth(){
+  if(clicks < 1_000_000) return;
+
+  rebirths++;
+  baseClick = 1 + rebirths * 0.1; // +10% per rebirth
+  clicks = 0;
+
+  upgrades = {
+    u1:{val:1,price:25},
+    u5:{val:5,price:100},
+    u50:{val:50,price:900}
   };
 
-  let clickValue = 1;
-  let count = 0;
-  let rebirthBonus = 0; // bonus do clicka po rebirth
+  document.getElementById("p1").textContent = 25;
+  document.getElementById("p5").textContent = 100;
+  document.getElementById("p50").textContent = 900;
 
-  function updateCounter() {
-    counter.textContent = count;
-    // Pokaż przycisk rebirth jeśli >= 1 000 000
-    if(count >= 1000000){
-      rebirthButton.style.display = "block";
-    }
-  }
-
-  clicker.addEventListener('click', e => {
-    e.preventDefault();
-    count += clickValue + rebirthBonus;
-
-    counter.style.transform = "scale(1.3)";
-    setTimeout(() => { counter.style.transform = "scale(1)"; }, 100);
-
-    updateCounter();
-  });
-
-  function buyUpgrade(id) {
-    const upg = upgrades[id];
-    if(count >= upg.price) {
-      count -= upg.price;
-      clickValue += upg.value;
-
-      // Zwiększenie ceny o 50% i zaokrąglenie w dół
-      upg.price = Math.floor(upg.price * 1.5);
-
-      // Aktualizacja cen w sklepie
-      document.getElementById("price1").textContent = upgrades.upgrade1.price;
-      document.getElementById("price5").textContent = upgrades.upgrade5.price;
-      document.getElementById("price50").textContent = upgrades.upgrade50.price;
-
-      updateCounter();
-    } else {
-      alert("Nie masz wystarczająco clicków!");
-    }
-  }
-
-  document.getElementById("upgrade1").addEventListener('click', () => buyUpgrade("upgrade1"));
-  document.getElementById("upgrade5").addEventListener('click', () => buyUpgrade("upgrade5"));
-  document.getElementById("upgrade50").addEventListener('click', () => buyUpgrade("upgrade50"));
-
-  // Rebirth
-  rebirthButton.addEventListener('click', () => {
-    if(count >= 1000000){
-      rebirthBonus += 1; // każdy rebirth daje +1 clickValue na grę
-      count = 0;
-      clickValue = 1;
-      upgrades = {
-        upgrade1: {value: 1, price: 25},
-        upgrade5: {value: 5, price: 100},
-        upgrade50: {value: 50, price: 900}
-      };
-      document.getElementById("price1").textContent = upgrades.upgrade1.price;
-      document.getElementById("price5").textContent = upgrades.upgrade5.price;
-      document.getElementById("price50").textContent = upgrades.upgrade50.price;
-      rebirthButton.style.display = "none";
-      updateCounter();
-      alert("REBIRTH! Twój bonus clicka wynosi teraz: +" + rebirthBonus);
-    }
-  });
-
+  rebirthBtn.style.display="none";
+  update();
+}
 </script>
 
 </body>
