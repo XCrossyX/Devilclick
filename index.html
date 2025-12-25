@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>😈 Clicker z Sklepem</title>
+<title>😈 Clicker z Rebirth</title>
 <style>
   body {
     margin: 0;
@@ -45,6 +45,7 @@
     gap: 20px;
     flex-wrap: wrap;
     justify-content: center;
+    margin-bottom: 20px;
   }
 
   .item {
@@ -67,6 +68,22 @@
 
   .item p {
     margin: 5px 0;
+  }
+
+  #rebirthButton {
+    padding: 15px 30px;
+    border-radius: 10px;
+    background: #ff0000;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: none;
+    color: #fff;
+    box-shadow: 0 0 15px #ff0000;
+  }
+
+  #rebirthButton:hover {
+    background: #ff4444;
   }
 </style>
 </head>
@@ -93,9 +110,12 @@
   </div>
 </div>
 
+<button id="rebirthButton">REBIRTH!</button>
+
 <script>
   const clicker = document.getElementById('clicker');
   const counter = document.getElementById('counter');
+  const rebirthButton = document.getElementById('rebirthButton');
 
   let upgrades = {
     upgrade1: {value: 1, price: 25},
@@ -105,14 +125,19 @@
 
   let clickValue = 1;
   let count = 0;
+  let rebirthBonus = 0; // bonus do clicka po rebirth
 
   function updateCounter() {
     counter.textContent = count;
+    // Pokaż przycisk rebirth jeśli >= 1 000 000
+    if(count >= 1000000){
+      rebirthButton.style.display = "block";
+    }
   }
 
   clicker.addEventListener('click', e => {
     e.preventDefault();
-    count += clickValue;
+    count += clickValue + rebirthBonus;
 
     counter.style.transform = "scale(1.3)";
     setTimeout(() => { counter.style.transform = "scale(1)"; }, 100);
@@ -143,6 +168,26 @@
   document.getElementById("upgrade1").addEventListener('click', () => buyUpgrade("upgrade1"));
   document.getElementById("upgrade5").addEventListener('click', () => buyUpgrade("upgrade5"));
   document.getElementById("upgrade50").addEventListener('click', () => buyUpgrade("upgrade50"));
+
+  // Rebirth
+  rebirthButton.addEventListener('click', () => {
+    if(count >= 1000000){
+      rebirthBonus += 1; // każdy rebirth daje +1 clickValue na grę
+      count = 0;
+      clickValue = 1;
+      upgrades = {
+        upgrade1: {value: 1, price: 25},
+        upgrade5: {value: 5, price: 100},
+        upgrade50: {value: 50, price: 900}
+      };
+      document.getElementById("price1").textContent = upgrades.upgrade1.price;
+      document.getElementById("price5").textContent = upgrades.upgrade5.price;
+      document.getElementById("price50").textContent = upgrades.upgrade50.price;
+      rebirthButton.style.display = "none";
+      updateCounter();
+      alert("REBIRTH! Twój bonus clicka wynosi teraz: +" + rebirthBonus);
+    }
+  });
 
 </script>
 
