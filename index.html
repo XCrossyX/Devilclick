@@ -9,22 +9,22 @@
 <style>
 body{
   margin:0;
-  height:100vh;
+  min-height:100vh;
   background:linear-gradient(135deg,#111,#300);
   color:#fff;
   font-family:Arial, sans-serif;
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
   user-select:none;
-  overflow:hidden;
+  overflow-y:auto;   /* ✅ SCROLL */
+  overflow-x:hidden;
 }
 
 #rebirthInfo{
   font-size:1.2rem;
   color:#ff6666;
-  margin-bottom:10px;
+  margin-top:20px;
 }
 
 #counter{
@@ -32,7 +32,7 @@ body{
   background:#900;
   padding:15px 30px;
   border-radius:15px;
-  margin-bottom:20px;
+  margin:20px 0;
   box-shadow:0 0 20px red;
 }
 
@@ -40,6 +40,7 @@ body{
   font-size:6rem;
   cursor:pointer;
   margin-bottom:25px;
+  touch-action:manipulation; /* ✅ brak zooma/przesuwania przy klikaniu */
 }
 #clicker:active{transform:scale(1.3);}
 
@@ -49,6 +50,7 @@ body{
   flex-wrap:wrap;
   justify-content:center;
   max-width:900px;
+  padding-bottom:40px; /* żeby ostatni był widoczny */
 }
 
 .item{
@@ -56,13 +58,13 @@ body{
   padding:12px 16px;
   border-radius:10px;
   cursor:pointer;
-  min-width:160px;
+  min-width:170px;
   text-align:center;
 }
 .item:hover{background:#900;}
 
 #rebirthBtn{
-  margin-top:25px;
+  margin:25px 0 40px;
   padding:15px 35px;
   font-size:1.4rem;
   background:red;
@@ -95,7 +97,6 @@ body{
 <button id="rebirthBtn">🔥 REBIRTH</button>
 
 <script>
-/* ===== ZMIENNE ===== */
 let clicks = 0;
 let baseClick = 1;
 let rebirths = 0;
@@ -114,7 +115,6 @@ const rebirthInfo = document.getElementById("rebirthInfo");
 const clicker = document.getElementById("clicker");
 const rebirthBtn = document.getElementById("rebirthBtn");
 
-/* ===== FUNKCJE ===== */
 function rebirthCost(){
   return (rebirths + 1) * 1_000_000;
 }
@@ -129,13 +129,11 @@ function update(){
     clicks >= rebirthCost() ? "block" : "none";
 }
 
-/* ===== KLIK ===== */
-clicker.addEventListener("click", ()=>{
+clicker.onclick = ()=>{
   clicks += baseClick * (rebirths + 1);
   update();
-});
+};
 
-/* ===== ZAKUPY ===== */
 function buy(id){
   const u = upgrades[id];
   if(clicks < u.price) return;
@@ -143,10 +141,6 @@ function buy(id){
   clicks -= u.price;
   baseClick += u.val;
   u.price = Math.floor(u.price * 1.5);
-
-  for(const key in upgrades){
-    document.getElementById("p"+upgrades[key].val)?.textContent = upgrades[key].price;
-  }
 
   document.getElementById("p1").textContent = upgrades.u1.price;
   document.getElementById("p5").textContent = upgrades.u5.price;
@@ -158,15 +152,14 @@ function buy(id){
   update();
 }
 
-document.getElementById("u1").onclick = ()=>buy("u1");
-document.getElementById("u5").onclick = ()=>buy("u5");
-document.getElementById("u50").onclick = ()=>buy("u50");
-document.getElementById("u250").onclick = ()=>buy("u250");
-document.getElementById("u1000").onclick = ()=>buy("u1000");
-document.getElementById("u5000").onclick = ()=>buy("u5000");
+u1.onclick=()=>buy("u1");
+u5.onclick=()=>buy("u5");
+u50.onclick=()=>buy("u50");
+u250.onclick=()=>buy("u250");
+u1000.onclick=()=>buy("u1000");
+u5000.onclick=()=>buy("u5000");
 
-/* ===== REBIRTH ===== */
-rebirthBtn.addEventListener("click", ()=>{
+rebirthBtn.onclick = ()=>{
   if(clicks < rebirthCost()) return;
 
   clicks = 0;
@@ -182,15 +175,8 @@ rebirthBtn.addEventListener("click", ()=>{
     u5000:{val:5000,price:65000}
   };
 
-  document.getElementById("p1").textContent = 25;
-  document.getElementById("p5").textContent = 100;
-  document.getElementById("p50").textContent = 900;
-  document.getElementById("p250").textContent = 4500;
-  document.getElementById("p1000").textContent = 15000;
-  document.getElementById("p5000").textContent = 65000;
-
   update();
-});
+};
 
 update();
 </script>
