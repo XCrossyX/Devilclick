@@ -9,7 +9,7 @@
 body{
   margin:0;
   height:100vh;
-  background:linear-gradient(135deg,#111,#300);
+  background:#111;
   color:#fff;
   font-family:Arial;
   display:flex;
@@ -20,58 +20,36 @@ body{
   overflow:hidden;
 }
 
-#rebirths{
-  font-size:1.5rem;
-  color:#ff6666;
-  margin-bottom:10px;
-}
-
+#rebirths{margin-bottom:10px;color:#ff5555;font-size:1.4rem;}
 #counter{
   font-size:3rem;
   background:#900;
   padding:15px 30px;
   border-radius:15px;
-  box-shadow:0 0 20px red;
   margin-bottom:20px;
 }
-
-#clicker{
-  font-size:6rem;
-  cursor:pointer;
-  margin-bottom:25px;
-}
-#clicker:active{
-  transform:scale(1.3);
-}
-
-#shop{
-  display:flex;
-  gap:15px;
-  flex-wrap:wrap;
-  justify-content:center;
-}
+#clicker{font-size:6rem;cursor:pointer;margin-bottom:25px;}
+#shop{display:flex;gap:15px;flex-wrap:wrap;justify-content:center;}
 
 .item{
-  background:#000a;
-  padding:15px 20px;
+  background:#000;
+  padding:15px;
   border-radius:10px;
   cursor:pointer;
-  min-width:160px;
+  min-width:150px;
   text-align:center;
 }
-.item:hover{background:#900;}
 
 #rebirthBtn{
-  margin-top:25px;
-  padding:15px 35px;
-  font-size:1.5rem;
-  background:red;
-  color:white;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
   display:none;
-  box-shadow:0 0 20px red;
+  margin-top:25px;
+  padding:15px 30px;
+  font-size:1.4rem;
+  background:red;
+  border:none;
+  color:white;
+  border-radius:10px;
+  cursor:pointer;
 }
 </style>
 </head>
@@ -83,21 +61,12 @@ body{
 <div id="clicker">😈</div>
 
 <div id="shop">
-  <div class="item" onclick="buy('u1')">
-    <b>Diabełek +1</b><br>
-    Cena: <span id="p1">25</span>
-  </div>
-  <div class="item" onclick="buy('u5')">
-    <b>Diabeł +5</b><br>
-    Cena: <span id="p5">100</span>
-  </div>
-  <div class="item" onclick="buy('u50')">
-    <b>Diablo +50</b><br>
-    Cena: <span id="p50">900</span>
-  </div>
+  <div class="item" id="u1">Diabełek +1<br>Cena: <span id="p1">25</span></div>
+  <div class="item" id="u5">Diabeł +5<br>Cena: <span id="p5">100</span></div>
+  <div class="item" id="u50">Diablo +50<br>Cena: <span id="p50">900</span></div>
 </div>
 
-<button id="rebirthBtn" onclick="rebirth()">🔥 REBIRTH 🔥</button>
+<button id="rebirthBtn">🔥 REBIRTH 🔥</button>
 
 <script>
 let clicks = 0;
@@ -112,18 +81,19 @@ let upgrades = {
 
 const counter = document.getElementById("counter");
 const rebirthTxt = document.getElementById("rebirths");
+const clicker = document.getElementById("clicker");
 const rebirthBtn = document.getElementById("rebirthBtn");
 
 function update(){
   counter.textContent = Math.floor(clicks);
   rebirthTxt.textContent = "Rebirthy: " + rebirths;
-  if(clicks >= 1_000_000) rebirthBtn.style.display="block";
+  rebirthBtn.style.display = clicks >= 1_000_000 ? "block" : "none";
 }
 
-document.getElementById("clicker").onclick = ()=>{
+clicker.addEventListener("click", ()=>{
   clicks += baseClick;
   update();
-};
+});
 
 function buy(id){
   let u = upgrades[id];
@@ -138,26 +108,27 @@ function buy(id){
   }
 }
 
-function rebirth(){
+document.getElementById("u1").addEventListener("click",()=>buy("u1"));
+document.getElementById("u5").addEventListener("click",()=>buy("u5"));
+document.getElementById("u50").addEventListener("click",()=>buy("u50"));
+
+rebirthBtn.addEventListener("click",()=>{
   if(clicks < 1_000_000) return;
-
   rebirths++;
-  baseClick = 1 + rebirths * 0.1; // +10% per rebirth
+  baseClick = 1 + rebirths * 0.1;
   clicks = 0;
-
   upgrades = {
     u1:{val:1,price:25},
     u5:{val:5,price:100},
     u50:{val:50,price:900}
   };
-
   document.getElementById("p1").textContent = 25;
   document.getElementById("p5").textContent = 100;
   document.getElementById("p50").textContent = 900;
-
-  rebirthBtn.style.display="none";
   update();
-}
+});
+
+update();
 </script>
 
 </body>
