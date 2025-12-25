@@ -23,7 +23,6 @@ body{
 
 #rank{
   font-size:1.4rem;
-  color:#ffd700;
   margin-top:10px;
 }
 
@@ -122,40 +121,41 @@ const clicker = document.getElementById("clicker");
 const rebirthBtn = document.getElementById("rebirthBtn");
 const rankDiv = document.getElementById("rank");
 
-// ===== DEFINICJA RANG =====
+// ===== DEFINICJA RANG Z KOLORAMI =====
 const ranks = [
-  {name:"Brąz I", min:0},
-  {name:"Brąz II", min:1000},
-  {name:"Brąz III", min:10000},
-  {name:"Złoto I", min:25000},
-  {name:"Złoto II", min:50000},
-  {name:"Złoto III", min:100000},
-  {name:"Diament I", min:200000},
-  {name:"Diament II", min:300000},
-  {name:"Diament III", min:500000},
-  {name:"Platyna I", min:1000000},
-  {name:"Platyna II", min:2500000},
-  {name:"Platyna III", min:5000000},
-  {name:"Legenda I", min:10000000},
-  {name:"Legenda II", min:25000000},
-  {name:"Legenda III", min:50000000},
-  {name:"Mistrz I", min:100000000},
-  {name:"Mistrz II", min:200000000},
-  {name:"Mistrz III", min:300000000},
-  {name:"Diabeł I", min:500000000},
-  {name:"Diabeł II", min:1000000000},
-  {name:"Diabeł III", min:2000000000},
-  {name:"Diabeł IV", min:3000000000},
-  {name:"Diabeł V", min:5000000000}
+  {name:"Brąz I", min:0, color:"#5C4033"},
+  {name:"Brąz II", min:1000, color:"#5C4033"},
+  {name:"Brąz III", min:10000, color:"#5C4033"},
+  {name:"Złoto I", min:25000, color:"#FFD700"},
+  {name:"Złoto II", min:50000, color:"#FFD700"},
+  {name:"Złoto III", min:100000, color:"#FFD700"},
+  {name:"Diament I", min:200000, color:"#00BFFF"},
+  {name:"Diament II", min:300000, color:"#00BFFF"},
+  {name:"Diament III", min:500000, color:"#00BFFF"},
+  {name:"Platyna I", min:1000000, color:"#7CFC00"},
+  {name:"Platyna II", min:2500000, color:"#7CFC00"},
+  {name:"Platyna III", min:5000000, color:"#7CFC00"},
+  {name:"Legenda I", min:10000000, color:"#FF8C00"},
+  {name:"Legenda II", min:25000000, color:"#FF8C00"},
+  {name:"Legenda III", min:50000000, color:"#FF8C00"},
+  {name:"Mistrz I", min:100000000, color:"#FF0000"},
+  {name:"Mistrz II", min:200000000, color:"#FF0000"},
+  {name:"Mistrz III", min:300000000, color:"#FF0000"},
+  {name:"Diabeł I", min:500000000, color:"#DA70D6"},
+  {name:"Diabeł II", min:1000000000, color:"#DA70D6"},
+  {name:"Diabeł III", min:2000000000, color:"#DA70D6"},
+  {name:"Diabeł IV", min:3000000000, color:"#DA70D6"},
+  {name:"Diabeł V", min:5000000000, color:"#9400D3"}
 ];
 
 function updateRank(){
-  let current = ranks[0].name;
+  let current = ranks[0];
   for(const r of ranks){
-    if(clicks >= r.min) current = r.name;
+    if(clicks >= r.min) current = r;
     else break;
   }
-  rankDiv.textContent = current;
+  rankDiv.textContent = current.name;
+  rankDiv.style.color = current.color;
 }
 
 // ===== FUNKCJE =====
